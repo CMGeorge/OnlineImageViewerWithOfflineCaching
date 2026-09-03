@@ -131,6 +131,3 @@ extension ImageCell {
     }
 }
 
-#Preview {
-    ContentView()
-}

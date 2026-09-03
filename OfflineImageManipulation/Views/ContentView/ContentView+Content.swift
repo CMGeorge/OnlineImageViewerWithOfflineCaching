@@ -21,9 +21,8 @@ extension ContentView {
         //dont use 2 components for data display. dynammic gridview can be enough
         ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(images) { image in
+                ForEach(imageListViewModel.images) { image in
                     ImageCell(displayAs: displayMode, image: image)
-                        .id(image.id)
                 }
             }
             .padding()

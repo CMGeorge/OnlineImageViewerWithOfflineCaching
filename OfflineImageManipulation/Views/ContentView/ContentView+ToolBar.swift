@@ -35,16 +35,6 @@ extension ContentView {
     }
     private func refresh() {
         print("Refresh needed")
-        let startId = images.last?.id ?? 0
-        images = (1...100).map {
-            let id = $0 + startId
-            return ImageItemModel(
-                id: id,
-                title: "Image \(id)",
-                imageURL: URL(
-                    string: "https://picsum.photos/id/\(id * 10)/600/400"
-                )!
-            )
-        }
+        imageListViewModel.changeImageList()
     }
 }
