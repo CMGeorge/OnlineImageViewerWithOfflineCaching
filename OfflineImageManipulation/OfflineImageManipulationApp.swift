@@ -25,7 +25,7 @@ struct OfflineImageManipulationApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(imageListViewModel: ImageListViewModel())
         }
 //        .modelContainer(sharedModelContainer)
     }

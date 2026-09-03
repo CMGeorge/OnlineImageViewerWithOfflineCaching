@@ -12,21 +12,13 @@ enum DisplayMode {
     case list
     case grid
 }
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @State var displayMode = DisplayMode.list
     
-    //Static demo items
-    @State var images: [ImageItemModel] = (1...100).map {
-        ImageItemModel(
-            id: $0,
-            title: "Image \($0)",
-            imageURL: URL(
-                string: "https://picsum.photos/id/\($0 * 10)/600/400"
-            )!
-        )
-    }
-    //    private var items: [ImageItemModel]
+    @State var imageListViewModel: ImageListViewModel
+
+    @State var displayMode = DisplayMode.list
 
     var body: some View {
         NavigationStack {
@@ -43,7 +35,7 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    ContentView(imageListViewModel: ImageListViewModel())
     //        .modelContainer(for: ImageItemModel.self, inMemory: true)
 }
 
