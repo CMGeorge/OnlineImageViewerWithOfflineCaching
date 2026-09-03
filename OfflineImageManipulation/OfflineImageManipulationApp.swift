@@ -10,6 +10,9 @@ import SwiftData
 
 @main
 struct OfflineImageManipulationApp: App {
+    @State private var networkMonitor = NetworkMonitor()
+    
+    
 //    var sharedModelContainer: ModelContainer = {
 //        let schema = Schema([
 //            ImageItemModel.self,
@@ -24,8 +27,9 @@ struct OfflineImageManipulationApp: App {
 //    }()
 
     var body: some Scene {
-        WindowGroup {
+            WindowGroup {
             ContentView(imageListViewModel: ImageListViewModel())
+//                .environment(\.networkMonitor, networkMonitor)
         }
 //        .modelContainer(sharedModelContainer)
     }

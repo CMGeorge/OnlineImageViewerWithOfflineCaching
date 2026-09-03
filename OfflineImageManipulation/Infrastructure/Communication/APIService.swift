@@ -9,7 +9,7 @@ import Foundation
 enum APIServiceEndpoints {
     static let wallpapers = "wallpapers"
 }
-class APIService {
+class APIService: ImageRetrivalProtocol {
     
     private let session: URLSession = .shared
     private let baseURL: String = "https://6a994a2f53c0481726b91819.mockapi.io/api/v1/"
