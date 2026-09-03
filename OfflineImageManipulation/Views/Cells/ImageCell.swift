@@ -15,6 +15,8 @@ struct ImageCell: View {
     @State private var uiImage: UIImage?
     @State private var isLoading = false
     @State private var hasError = false
+
+    @State private var showFullScreen = false
     var body: some View {
         Button(action: onTap) {
             cellContent
@@ -23,12 +25,16 @@ struct ImageCell: View {
         .task {
             await loadImage()
         }
+        .fullScreenCover(isPresented: $showFullScreen) {
+                    FullScreenImageView(image: image)
+                }
     }
 
 }
 extension ImageCell {
     private func onTap() {
-        //TODO: Implement
+        print("Image tapped: \(image.title)")
+        showFullScreen = true
     }
     private func loadImage() async {
         do {
@@ -38,6 +44,7 @@ extension ImageCell {
             let (data, _) = try await URLSession.shared.data(
                 from: image.imageURL
             )
+            //need this to not update the ui if task was canceled.
             try Task.checkCancellation()
             try await Task.sleep(for: .seconds(2))  //more delay for ui testing
             guard let uiImage = UIImage(data: data) else {
@@ -54,7 +61,12 @@ extension ImageCell {
             isLoading = false
         }
     }
-
+    func prepareForReuse() {
+        showImage = false
+        uiImage = nil
+        isLoading = false
+        hasError = false
+    }
 }
 extension ImageCell {
 

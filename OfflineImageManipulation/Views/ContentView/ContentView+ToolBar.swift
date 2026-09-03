@@ -15,7 +15,7 @@ extension ContentView {
                 //switch the mode on press
                 withAnimation(.easeInOut(duration: 0.25)) {
                     displayMode =
-                    displayMode == .grid
+                        displayMode == .grid
                         ? .list
                         : .grid
                 }
@@ -34,6 +34,17 @@ extension ContentView {
         }
     }
     private func refresh() {
-        // TODO: ViewModel refresh
+        print("Refresh needed")
+        let startId = images.last?.id ?? 0
+        images = (1...100).map {
+            let id = $0 + startId
+            return ImageItemModel(
+                id: id,
+                title: "Image \(id)",
+                imageURL: URL(
+                    string: "https://picsum.photos/id/\(id * 10)/600/400"
+                )!
+            )
+        }
     }
 }

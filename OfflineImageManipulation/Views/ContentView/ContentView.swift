@@ -21,12 +21,12 @@ struct ContentView: View {
             GridItem(.flexible())
     ]
     //Static demo items
-    let images: [ImageItemModel] = (1...100).map {
+    @State var images: [ImageItemModel] = (1...100).map {
         ImageItemModel(
             id: $0,
             title: "Image \($0)",
             imageURL: URL(
-                string: "https://picsum.photos/id/\($0)/600/400"
+                string: "https://picsum.photos/id/\($0 * 10)/600/400"
             )!
         )
     }
@@ -42,6 +42,7 @@ struct ContentView: View {
         }
     }
 }
+
 //Header view here
 
 
