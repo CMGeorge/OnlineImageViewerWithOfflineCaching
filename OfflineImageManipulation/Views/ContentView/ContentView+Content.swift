@@ -28,6 +28,7 @@ extension ContentView {
             }
             .padding()
             .animation(.easeInOut(duration: 0.25), value: displayMode)
+            
         }
     }
 }
