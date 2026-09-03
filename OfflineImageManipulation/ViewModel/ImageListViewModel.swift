@@ -9,7 +9,7 @@ import Foundation
 @Observable
 final class ImageListViewModel {
     let networkMonitor: NetworkMonitor
-    var toastText: String?
+    var currentToastText: String? = nil
     private var toastTask: Task<Void, Never>?
 
 
@@ -32,16 +32,16 @@ final class ImageListViewModel {
             if isConnected && !wasConnected {
                 showToast("Back online")
             } else if !isConnected {
-                toastText = nil
+                currentToastText = nil
             }
         }
     func showToast(_ text: String) {
             toastTask?.cancel()
-            toastText = text
+        currentToastText = text
             toastTask = Task {
                 try? await Task.sleep(for: .seconds(2))
                 guard !Task.isCancelled else { return }
-                toastText = nil
+                currentToastText = nil
             }
         }
 
