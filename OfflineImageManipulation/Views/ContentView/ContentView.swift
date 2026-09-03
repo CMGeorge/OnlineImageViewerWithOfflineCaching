@@ -15,11 +15,7 @@ enum DisplayMode {
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State var displayMode = DisplayMode.list
-    //define the columns split
-    let columns = [
-            GridItem(.flexible()),
-            GridItem(.flexible())
-    ]
+    
     //Static demo items
     @State var images: [ImageItemModel] = (1...100).map {
         ImageItemModel(
@@ -34,7 +30,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            content
+            listView
             .navigationTitle("Offline images demo")
             .toolbar {
                 toolbar
