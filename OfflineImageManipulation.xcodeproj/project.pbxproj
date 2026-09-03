@@ -27,6 +27,7 @@
 		FADF890030498F5E008C3A57 /* OfflineImageManipulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineImageManipulation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FADF890F30498F60008C3A57 /* OfflineImageManipulationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OfflineImageManipulationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FADF891930498F60008C3A57 /* OfflineImageManipulationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OfflineImageManipulationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FADF89443049BCA6008C3A57 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +76,7 @@
 		FADF88F730498F5E008C3A57 = {
 			isa = PBXGroup;
 			children = (
+				FADF89443049BCA6008C3A57 /* README.md */,
 				FADF890230498F5E008C3A57 /* OfflineImageManipulation */,
 				FADF891230498F60008C3A57 /* OfflineImageManipulationTests */,
 				FADF891C30498F60008C3A57 /* OfflineImageManipulationUITests */,
