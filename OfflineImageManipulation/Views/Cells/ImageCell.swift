@@ -41,9 +41,10 @@ extension ImageCell {
             // Temporary delay so we can see the placeholder.
             try await Task.sleep(for: .seconds(2))
             isLoading = true
-            let (data, _) = try await URLSession.shared.data(
-                from: image.imageURL
-            )
+            hasError = false
+            //We should use the network state
+            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: true)
+
             //need this to not update the ui if task was canceled.
             try Task.checkCancellation()
             try await Task.sleep(for: .seconds(2))  //more delay for ui testing
@@ -54,7 +55,7 @@ extension ImageCell {
             self.uiImage = uiImage
             isLoading = false
         } catch is CancellationError {
-            print("Image loading cancelled: \(image.id)")
+//            print("Image loading cancelled: \(image.id)")
         } catch {
             print("Image loading failed: \(error)")
             hasError = true
