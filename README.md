@@ -4,3 +4,4 @@ TODO:
 - On device connection state changed to online, automatically fetch offline displayed items
 - Add pull to refresh 
 - Add translation support
+- Use scaled version of the image for quick load and better scrolling
