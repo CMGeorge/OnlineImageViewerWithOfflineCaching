@@ -48,6 +48,8 @@ final class ImageListViewModel {
     func handleConnectivityChange(from wasConnected: Bool, to isConnected: Bool) async {
             if isConnected && !wasConnected {
                 showToast("Back online")
+                //Do not load data every time is connected.
+                guard !dataSynced else { return }
                 await loadData()
             } else if !isConnected {
                 currentToastText = nil
