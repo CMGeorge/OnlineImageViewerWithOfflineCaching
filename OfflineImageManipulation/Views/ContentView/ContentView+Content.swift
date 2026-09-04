@@ -22,12 +22,15 @@ extension ContentView {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(imageListViewModel.images) { image in
-                    ImageCell(displayAs: displayMode, image: image)
+                    ImageCell(displayAs: displayMode, image: image, isOnline: imageListViewModel.networkMonitor.connected
+)
                 }
             }
             .padding()
             .animation(.easeInOut(duration: 0.25), value: displayMode)
             
+        }.task {
+            await imageListViewModel.loadData()
         }
     }
 }

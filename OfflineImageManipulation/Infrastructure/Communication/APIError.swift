@@ -14,5 +14,7 @@ enum APIError: Error {
     case invalidResponse
     //issues with the received data
     case decodingError
+    //Internet  / API issue without cached data
+    case noCacheForOfflineData
 
 }

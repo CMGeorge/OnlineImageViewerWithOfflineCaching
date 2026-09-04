@@ -41,7 +41,9 @@ struct ContentView: View {
                     }
             .animation(.easeInOut(duration: 0.25), value: imageListViewModel.networkMonitor.connected)
             .onChange(of: imageListViewModel.networkMonitor.connected) { wasConnected, isConnected in
-                imageListViewModel.handleConnectivityChange(from: wasConnected, to: isConnected)
+                Task {
+                    await imageListViewModel.handleConnectivityChange(from: wasConnected, to: isConnected)
+                }
 
             }
             .onChange(of: displayMode) { _, mode in

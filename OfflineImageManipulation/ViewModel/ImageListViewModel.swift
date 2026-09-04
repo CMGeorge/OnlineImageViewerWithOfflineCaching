@@ -9,28 +9,46 @@ import Foundation
 @Observable
 final class ImageListViewModel {
     let networkMonitor: NetworkMonitor
+    let wallpaperRepository: WallpapersRepositoryProtocol //for testability
+    
     var currentToastText: String? = nil
     private var toastTask: Task<Void, Never>?
 
+    //general loading state
+    var isLoading = false
 
+    private var dataSynced: Bool = false
     //Static demo items
-    var images: [ImageItemModel] = (1...100).map {
-        ImageItemModel(
-            id: $0,
-            title: "Image \($0)",
-            imageURL: URL(
-                string: "https://picsum.photos/id/\($0 * 10)/600/400"
-            )!
-        )
-    }
+    var images: [ImageItemModel] = []
 
-    init(networkMonitor: NetworkMonitor = NetworkMonitor()) {
+    init(networkMonitor: NetworkMonitor = NetworkMonitor(),
+    repository: WallpapersRepositoryProtocol? = nil) {
         self.networkMonitor = networkMonitor
+        self.wallpaperRepository = repository ?? WallpapersRepository(network: networkMonitor)
 
     }
-    func handleConnectivityChange(from wasConnected: Bool, to isConnected: Bool) {
+    func loadData() async {
+        isLoading = true
+        dataSynced = false
+        defer { isLoading = false }
+
+        do {
+            let result = try await wallpaperRepository.fetchImages()
+            images = result.items
+            if (result.source == .Cache){
+                showToast(result.isFromOffline ? "Offline — cached list" : "Showing cached list" )
+            }else {
+                dataSynced = true
+            }
+            
+        }catch {
+            showToast("Could not load image list")
+        }
+    }
+    func handleConnectivityChange(from wasConnected: Bool, to isConnected: Bool) async {
             if isConnected && !wasConnected {
                 showToast("Back online")
+                await loadData()
             } else if !isConnected {
                 currentToastText = nil
             }

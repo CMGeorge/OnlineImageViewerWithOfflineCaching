@@ -11,6 +11,8 @@ struct ImageCell: View {
     //imutable, initialized by the parent on create
     let displayAs: DisplayMode
     let image: ImageItemModel
+    let isOnline: Bool
+
     @State private var showImage = false  //temporary to simulate loading
     @State private var uiImage: UIImage?
     @State private var isLoading = false
@@ -22,8 +24,12 @@ struct ImageCell: View {
             cellContent
         }
         .buttonStyle(.plain)
-        .task {
+        .task(id: image.id) {
             await loadImage()
+        }
+        .onChange(of: isOnline) { _, online in
+            guard online, uiImage == nil else { return }
+            Task { await loadImage() }
         }
         .fullScreenCover(isPresented: $showFullScreen) {
                     FullScreenImageView(image: image)
@@ -39,15 +45,15 @@ extension ImageCell {
     private func loadImage() async {
         do {
             // Temporary delay so we can see the placeholder.
-            try await Task.sleep(for: .seconds(2))
+//            try await Task.sleep(for: .seconds(2))
             isLoading = true
             hasError = false
             //We should use the network state
-            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: true)
+            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: isOnline)
 
             //need this to not update the ui if task was canceled.
             try Task.checkCancellation()
-            try await Task.sleep(for: .seconds(2))  //more delay for ui testing
+//            try await Task.sleep(for: .seconds(2))  //more delay for ui testing
             guard let uiImage = UIImage(data: data) else {
                 hasError = true
                 return
