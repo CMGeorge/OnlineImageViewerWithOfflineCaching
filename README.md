@@ -1,6 +1,5 @@
 TODO:
 
-- Add translation support
 - Use scaled version of the image for quick load and better scrolling
 - Should implement Accessibility
 - Application / Listview title improve 

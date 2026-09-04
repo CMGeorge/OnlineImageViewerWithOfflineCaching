@@ -23,13 +23,13 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             listView
-            .navigationTitle("Offline images demo")
+                .navigationTitle(String(localized:"Offline images demo"))
             .toolbar {
                 toolbar
             }
             .safeAreaInset(edge: .top) {
                 if !imageListViewModel.networkMonitor.connected {
-                    CriticalBanner(message: "No internet connection")
+                    CriticalBanner(message: String(localized:"No internet connection"))
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
@@ -47,7 +47,7 @@ struct ContentView: View {
 
             }
             .onChange(of: displayMode) { _, mode in
-                imageListViewModel.showToast(mode == .grid ? "Grid view" : "List view")
+                imageListViewModel.showToast(String(localized:  (mode == .grid ? "Grid view" : "List view")))
             }
 
         }
