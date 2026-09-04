@@ -7,3 +7,5 @@ TODO:
 - Should implement Accessibility
 - Application / Listview title improve
 + If app startup was in offline, on conection we need retrieve the online list to make sure we have the lasest data 
+- Back online toast should not be displayed at application startup
+- Dismiss fullscreen preview with drag gesture
