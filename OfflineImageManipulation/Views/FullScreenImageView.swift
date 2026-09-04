@@ -45,9 +45,7 @@ struct FullScreenImageView: View {
                 .background(.ultraThinMaterial)
                 viewContent
 
-            }
-
-            //            .padding()
+            }   
         }
         .statusBarHidden()
         .onChange(of: isOnline) { _, online in
