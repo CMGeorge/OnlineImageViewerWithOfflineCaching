@@ -6,4 +6,4 @@ TODO:
 - Use scaled version of the image for quick load and better scrolling
 - Should implement Accessibility
 - Application / Listview title improve
-- If app startup was in offline, on conection we need retrieve the online list to make sure we have the lasest data 
++ If app startup was in offline, on conection we need retrieve the online list to make sure we have the lasest data 
