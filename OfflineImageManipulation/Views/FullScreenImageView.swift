@@ -80,10 +80,11 @@ extension FullScreenImageView {
     }
     private func loadImage() async {
         do {
+            loadingFailed = false
             print("Load image: \(image.id) form \(image.imageURL)")
-            let (data, _) = try await URLSession.shared.data(
-                from: image.imageURL
-            )
+            //lets use cached data also here.
+            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: isOnline)
+
             //need this to not update the ui if task was canceled.
             try Task.checkCancellation()
             guard let uiImage = UIImage(data: data) else {
