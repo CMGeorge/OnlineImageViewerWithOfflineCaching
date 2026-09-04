@@ -9,31 +9,52 @@ import SwiftUI
 
 struct FullScreenImageView: View {
     let image: ImageItemModel
+    let isOnline: Bool
 
     @State private var loadeImage: UIImage? = nil
     @State private var loadingFailed = false
 
     @Environment(\.dismiss)
     private var dismiss
-    
+
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color.gray
-                .opacity(0.1).ignoresSafeArea()
-            viewContent
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .padding()
-                    .background(.black.opacity(0.5))
-                    .clipShape(Circle())
+            Color.gray.opacity(0.1).ignoresSafeArea()
+            VStack {
+                HStack {
+                    Color.clear
+                        .frame(width: 36, height: 36)
+                        .padding()
+                    Text(image.title)
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(.black)
+                            .frame(width: 36, height: 36)
+                            .background(.ultraThickMaterial, in: Circle())
+                            .padding()
+                    }
+
+                }
+                .background(.ultraThinMaterial)
+                viewContent
+
             }
 
-            .padding()
-        }.task {
+            //            .padding()
+        }
+        .statusBarHidden()
+        .onChange(of: isOnline) { _, online in
+            guard online, loadeImage == nil else { return }
+            Task { await loadImage() }
+        }
+        .task {
             await loadImage()
         }
     }
@@ -55,7 +76,7 @@ extension FullScreenImageView {
                 .tint(.white)
                 .controlSize(.large)
         }
-        
+
     }
     private func loadImage() async {
         do {
@@ -88,6 +109,7 @@ extension FullScreenImageView {
             imageURL: URL(
                 string: "https://picsum.photos/id/1001/600/400"
             )!
-        )
+        ),
+        isOnline: true
     )
 }

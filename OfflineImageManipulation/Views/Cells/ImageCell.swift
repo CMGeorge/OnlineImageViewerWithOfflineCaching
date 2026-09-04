@@ -32,7 +32,8 @@ struct ImageCell: View {
             Task { await loadImage() }
         }
         .fullScreenCover(isPresented: $showFullScreen) {
-                    FullScreenImageView(image: image)
+                    FullScreenImageView(image: image,
+                                        isOnline: self.isOnline)
                 }
     }
 

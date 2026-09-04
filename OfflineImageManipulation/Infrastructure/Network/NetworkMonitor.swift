@@ -9,8 +9,10 @@
 import Network
 
 //make it observable because we need real time status change
+
+//make it observable
 import Observation
-@Observable //make it observable
+@Observable
 class NetworkMonitor: NetworkMonitorProtocol {
 
     //allow extenrnal read and no modification (read only properties)
