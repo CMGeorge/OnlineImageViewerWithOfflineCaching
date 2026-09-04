@@ -34,7 +34,7 @@ extension ContentView {
             await imageListViewModel.loadData()
         }
         .refreshable {
-            await imageListViewModel.loadData()
+            await imageListViewModel.changeImageList()
         }
     }
 }
