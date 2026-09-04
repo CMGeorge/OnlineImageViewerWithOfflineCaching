@@ -63,7 +63,7 @@ extension ImageCell {
         } catch is CancellationError {
 //            print("Image loading cancelled: \(image.id)")
         } catch {
-            print("Image loading failed: \(error)")
+//            print("Image loading failed: \(error)")
             hasError = true
             isLoading = false
         }

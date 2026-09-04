@@ -6,5 +6,5 @@
 //
 
 protocol WallpapersRepositoryProtocol {
-    func fetchImages() async throws -> WallpaperResult
+    func fetchImages() async throws -> WallpapersRepository.WallpaperResult
 }
