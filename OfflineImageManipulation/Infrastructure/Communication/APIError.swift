@@ -5,7 +5,7 @@
 //  Created by Calugar George on 03/09/2026.
 //
 
-enum APIError: Error {
+enum APIError: Error, Equatable {
     //When server return a error for the api call
     case httpError(Int)
     //when URL string can't be casted to URL (maybe invalid endpoint name or base url)

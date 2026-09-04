@@ -65,17 +65,8 @@ final class ImageListViewModel {
 
 }
 extension ImageListViewModel {
-    func changeImageList() {
-        let startId = images.last?.id ?? 0
-        images = (1...100).map {
-            let id = $0 + startId
-            return ImageItemModel(
-                id: id,
-                title: "Image \(id)",
-                imageURL: URL(
-                    string: "https://picsum.photos/id/\(id * 10)/600/400"
-                )!
-            )
-        }
+    func changeImageList() async  {
+        images.removeAll()
+        await loadData()
     }
 }

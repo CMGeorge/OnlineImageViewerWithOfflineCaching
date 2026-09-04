@@ -35,6 +35,8 @@ extension ContentView {
     }
     private func refresh() {
         print("Refresh needed")
-        imageListViewModel.changeImageList()
+        Task{
+            await imageListViewModel.changeImageList()
+        }
     }
 }

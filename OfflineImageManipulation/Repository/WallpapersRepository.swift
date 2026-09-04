@@ -7,23 +7,26 @@
 
 import Foundation
 
-struct WallpaperResult {
-    let items: [ImageItemModel]
-    let source: WallpapersRepository.DataSource
-    // true dacă e din cache dar online a eșuat
-    let isFromOffline: Bool
-}
+
+
 final class WallpapersRepository: WallpapersRepositoryProtocol{
     enum DataSource: Equatable {
         case Network
         case Cache
     }
-    
+    struct WallpaperResult {
+        let items: [ImageItemModel]
+        let source: WallpapersRepository.DataSource
+        // true dacă e din cache dar online a eșuat
+        let isFromOffline: Bool
+    }
     private let imageAPI: ImageRetrivalProtocol
     private let cache: WallpaperListCache
     private let network: NetworkMonitorProtocol
 
-    init(imageAPI: ImageRetrivalProtocol = APIService(), cache: WallpaperListCache = WallpaperListCache(), network: NetworkMonitorProtocol) {
+    init(imageAPI: ImageRetrivalProtocol = APIService(),
+         cache: WallpaperListCache = WallpaperListCache(),
+         network: NetworkMonitorProtocol) {
         self.imageAPI = imageAPI
         self.cache = cache
         self.network = network

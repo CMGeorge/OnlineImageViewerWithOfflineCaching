@@ -29,7 +29,11 @@ extension ContentView {
             .padding()
             .animation(.easeInOut(duration: 0.25), value: displayMode)
             
-        }.task {
+        }
+        .task {
+            await imageListViewModel.loadData()
+        }
+        .refreshable {
             await imageListViewModel.loadData()
         }
     }
