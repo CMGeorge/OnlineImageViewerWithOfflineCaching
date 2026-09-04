@@ -31,7 +31,7 @@ struct ImageCell: View {
             guard online, uiImage == nil else { return }
             Task { await loadImage() }
         }
-        .fullScreenCover(isPresented: $showFullScreen) {
+        .sheet(isPresented: $showFullScreen) {
                     FullScreenImageView(image: image,
                                         isOnline: self.isOnline)
                 }
