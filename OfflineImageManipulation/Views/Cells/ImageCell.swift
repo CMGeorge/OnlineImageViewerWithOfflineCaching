@@ -19,6 +19,14 @@ struct ImageCell: View {
     @State private var hasError = false
 
     @State private var showFullScreen = false
+    
+    private var imageAccessibilityValue: Text {
+        if uiImage != nil { return Text("") }
+        if isLoading { return Text("Loading") }
+        if hasError { return Text("Could not load") }
+        return Text("Not loaded")
+    }
+    
     var body: some View {
         Button(action: onTap) {
             cellContent
@@ -35,10 +43,15 @@ struct ImageCell: View {
                     FullScreenImageView(image: image,
                                         isOnline: self.isOnline)
                 }
+        //accessibility
+        .accessibilityLabel(image.title)
+        .accessibilityHint(Text("Shows the image full screen."))
+        .accessibilityValue( imageAccessibilityValue )
     }
 
 }
 extension ImageCell {
+    
     private func onTap() {
         print("Image tapped: \(image.title)")
         showFullScreen = true
