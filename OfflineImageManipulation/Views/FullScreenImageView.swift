@@ -14,11 +14,14 @@ struct FullScreenImageView: View {
     @State private var loadeImage: UIImage? = nil
     @State private var loadingFailed = false
     @State private var isLoading: Bool = false
-    
+
+    //zoom control
+    @State private var scale: CGFloat = 1
+    @State private var baseScale: CGFloat = 1
+
     @Environment(\.dismiss)
     private var dismiss
-    
-    
+
     private var imageAccessibilityValue: Text {
         if loadeImage != nil { return Text("") }
         if isLoading { return Text("Loading") }
@@ -34,7 +37,7 @@ struct FullScreenImageView: View {
                         .frame(width: 36, height: 36)
                         .padding()
                         .accessibilityHidden(true)
-                    
+
                     Text(image.title)
                         .font(.headline)
                         .foregroundStyle(.black)
@@ -55,8 +58,10 @@ struct FullScreenImageView: View {
                 }
                 .background(.ultraThinMaterial)
                 viewContent
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
 
-            }   
+            }
         }
         .statusBarHidden()
         .onChange(of: isOnline) { _, online in
@@ -70,13 +75,11 @@ struct FullScreenImageView: View {
 }
 
 extension FullScreenImageView {
+
     @ViewBuilder
     private var viewContent: some View {
-        if let loadeImage {
-            Image(uiImage: loadeImage)
-                .resizable()
-                .scaledToFit()
-                .accessibilityLabel(Text(image.title))
+        if loadeImage != nil {
+            theImage
         } else if loadingFailed {
             Image(systemName: "photo.trianglebadge.exclamationmark")
                 .font(.largeTitle)
@@ -88,16 +91,60 @@ extension FullScreenImageView {
         }
 
     }
-    
+    @ViewBuilder
+    private var theImage: some View {
+
+        Image(uiImage: loadeImage!)
+            .resizable()
+            .scaledToFit()
+            .accessibilityLabel(Text(image.title))
+            .scaleEffect(scale)
+            .onTapGesture(count: 2) {
+                print("Double tap on image")
+                withAnimation(.easeInOut) {
+
+                    switch scale {
+                    case 0..<2: scale = 2
+                    case 2..<3: scale = 3
+                    case 3..<4: scale = 4
+                    default:
+                        scale = 1
+                    }
+                    baseScale = scale
+
+                }
+            }
+            .gesture(
+                MagnifyGesture()
+                    .onChanged { value in
+                        withAnimation(.easeInOut) {
+                            let next = baseScale * value.magnification
+                            scale = min(max(next, 1), 4)
+                        }
+                    }
+                    .onEnded { _ in
+                        if scale < 1.05 {
+                            withAnimation(.easeOut) { scale = 1 }
+                            baseScale = 1
+                        } else {
+                            baseScale = scale
+                        }
+                    }
+            )
+
+    }
     private func loadImage() async {
         do {
             loadingFailed = false
             isLoading = true
-            defer { isLoading = false } //mare ure loadin state is changed when exist the function
-            
+            defer { isLoading = false }  //mare ure loadin state is changed when exist the function
+
             print("Load image: \(image.id) form \(image.imageURL)")
             //lets use cached data also here.
-            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: isOnline)
+            let data = try await ImageLoader.shared.retrieveImage(
+                for: image.imageURL,
+                allowNetwork: isOnline
+            )
 
             //need this to not update the ui if task was canceled.
             try Task.checkCancellation()

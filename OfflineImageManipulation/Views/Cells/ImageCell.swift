@@ -19,14 +19,14 @@ struct ImageCell: View {
     @State private var hasError = false
 
     @State private var showFullScreen = false
-    
+
     private var imageAccessibilityValue: Text {
         if uiImage != nil { return Text("") }
         if isLoading { return Text("Loading") }
         if hasError { return Text("Could not load") }
         return Text("Not loaded")
     }
-    
+
     var body: some View {
         Button(action: onTap) {
             cellContent
@@ -40,18 +40,27 @@ struct ImageCell: View {
             Task { await loadImage() }
         }
         .sheet(isPresented: $showFullScreen) {
-                    FullScreenImageView(image: image,
-                                        isOnline: self.isOnline)
-                }
+            FullScreenImageView(
+                image: image,
+                isOnline: self.isOnline
+            )
+        }
         //accessibility
         .accessibilityLabel(image.title)
         .accessibilityHint(Text("Shows the image full screen."))
-        .accessibilityValue( imageAccessibilityValue )
+        .accessibilityValue(imageAccessibilityValue)
+        .overlay(alignment: .bottom) {
+            overlayCaption
+        }
+        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .shadow(color: .black.opacity(0.4), radius: 4, x: 10, y: 10)
+
     }
 
 }
 extension ImageCell {
-    
+
     private func onTap() {
         print("Image tapped: \(image.title)")
         showFullScreen = true
@@ -59,15 +68,18 @@ extension ImageCell {
     private func loadImage() async {
         do {
             // Temporary delay so we can see the placeholder.
-//            try await Task.sleep(for: .seconds(2))
+            //            try await Task.sleep(for: .seconds(2))
             isLoading = true
             hasError = false
             //We should use the network state
-            let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: isOnline)
+            let data = try await ImageLoader.shared.retrieveImage(
+                for: image.imageURL,
+                allowNetwork: isOnline
+            )
 
             //need this to not update the ui if task was canceled.
             try Task.checkCancellation()
-//            try await Task.sleep(for: .seconds(2))  //more delay for ui testing
+            //            try await Task.sleep(for: .seconds(2))  //more delay for ui testing
             guard let uiImage = UIImage(data: data) else {
                 hasError = true
                 return
@@ -75,9 +87,9 @@ extension ImageCell {
             self.uiImage = uiImage
             isLoading = false
         } catch is CancellationError {
-//            print("Image loading cancelled: \(image.id)")
+            //            print("Image loading cancelled: \(image.id)")
         } catch {
-//            print("Image loading failed: \(error)")
+            //            print("Image loading failed: \(error)")
             hasError = true
             isLoading = false
         }
@@ -109,6 +121,7 @@ extension ImageCell {
             placeholder
         }
     }
+
     private var loadingView: some View {
         imageContainer {
             ProgressView()
@@ -152,3 +165,37 @@ extension ImageCell {
     }
 }
 
+extension ImageCell {
+    private var captionGradient: LinearGradient {
+        LinearGradient(
+            colors: [Color.gray.opacity(0.5), Color.black],
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    private var overlayCaption: some View {
+        Text (image.title)
+//        Text(
+//            "This is a very long text to check how the text will be displayed in case it is very big. I prefer to show it on 4 rows on list view and about 2 rows in grid wiew with tailing right and word wrap"
+//        )
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(Color.white)
+        .lineLimit(displayAs == .list ? 3 : 2)
+        .truncationMode(.tail)
+        .multilineTextAlignment(.leading)
+        .allowsTightening(false)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(8)
+        .background(captionGradient)
+        .accessibilityHidden(true)
+    }
+    /*
+     TODO: Implement calculation to word wrap + trailing ...
+     If I'm not wrong same problem was also on UIKit
+     */
+}
+
+#Preview {
+    ContentView(imageListViewModel: ImageListViewModel())
+}
