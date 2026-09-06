@@ -35,14 +35,11 @@ actor ImageLoader {
     func retrieveImage(for url: URL, allowNetwork: Bool = true) async throws
         -> Data
     {
-//        print("Start retrive image")
         if let existing = ongoingDownloads[url] {
-//            print("Return data from cache")
             return try await existing.value
         }
         let task = Task<Data, Error> {
             if let data = cache.load(for: url) {
-//                print("Return data from cache using task")
                 return data
             }
             if !allowNetwork {
@@ -50,9 +47,7 @@ actor ImageLoader {
             }
             let (data, _) = try await session.data(from: url)
             
-            try? cache.save(data: data, for: url)
-//            print("Return data after save")
-            
+            try? cache.save(data: data, for: url)            
             return data
         }
         ongoingDownloads[url] = task

@@ -100,7 +100,6 @@ extension FullScreenImageView {
             .accessibilityLabel(Text(image.title))
             .scaleEffect(scale)
             .onTapGesture(count: 2) {
-                print("Double tap on image")
                 withAnimation(.easeInOut) {
 
                     switch scale {
@@ -139,7 +138,6 @@ extension FullScreenImageView {
             isLoading = true
             defer { isLoading = false }  //mare ure loadin state is changed when exist the function
 
-            print("Load image: \(image.id) form \(image.imageURL)")
             //lets use cached data also here.
             let data = try await ImageLoader.shared.retrieveImage(
                 for: image.imageURL,
@@ -150,14 +148,14 @@ extension FullScreenImageView {
             try Task.checkCancellation()
             guard let uiImage = UIImage(data: data) else {
                 loadingFailed = true
-                print("Invalid image data")
                 return
             }
             self.loadeImage = uiImage
         } catch is CancellationError {
-            print("Fullscreen Image loading cancelled: \(image.id)")
+            //TODO: implement cancellation error handling if needed
+
         } catch {
-            print("Fullscreen Image loading failed: \(error)")
+            //TODO: implement error handling
             loadingFailed = true
         }
     }

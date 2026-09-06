@@ -31,7 +31,6 @@ final class WallpaperListCache: Sendable {
     func saveWallpaperList(_ list: [ImageItemModel]) throws {
         let data = try JSONEncoder().encode(list)
         try data.write(to: fileURL, options: .atomic)
-        print("List cache saved \(list.count) items to \(fileURL.path)")
 
     }
 }

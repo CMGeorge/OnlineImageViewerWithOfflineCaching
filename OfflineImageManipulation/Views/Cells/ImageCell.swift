@@ -62,7 +62,6 @@ struct ImageCell: View {
 extension ImageCell {
 
     private func onTap() {
-        print("Image tapped: \(image.title)")
         showFullScreen = true
     }
     private func loadImage() async {
@@ -87,9 +86,7 @@ extension ImageCell {
             self.uiImage = uiImage
             isLoading = false
         } catch is CancellationError {
-            //            print("Image loading cancelled: \(image.id)")
         } catch {
-            //            print("Image loading failed: \(error)")
             hasError = true
             isLoading = false
         }

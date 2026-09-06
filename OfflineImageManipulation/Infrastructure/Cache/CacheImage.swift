@@ -42,9 +42,13 @@ nonisolated final class CacheImage:Sendable {
         do {
             try data.write(to: filePath, options: .atomic)
         }catch {
-            print("Imposible to sae file")
+#if DEBUG
+            print("Imposible to save file")
+#endif
         }
-        print ("Save complete to \(filePath)")
+#if DEBUG
+        print("Save complete to \(filePath)")
+#endif
     }
     func load(for url: URL) -> Data? {
         try? Data(contentsOf: fileURL(for: url))
