@@ -28,7 +28,7 @@ class NetworkMonitor: NetworkMonitorProtocol {
         //decision should be take if we need to auto start or not
         start()
         //quick update the state at init
-        update(monitor.currentPath)
+//        update(monitor.currentPath)
 
     }
     deinit {
