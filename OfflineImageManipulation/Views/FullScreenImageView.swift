@@ -13,10 +13,18 @@ struct FullScreenImageView: View {
 
     @State private var loadeImage: UIImage? = nil
     @State private var loadingFailed = false
-
+    @State private var isLoading: Bool = false
+    
     @Environment(\.dismiss)
     private var dismiss
-
+    
+    
+    private var imageAccessibilityValue: Text {
+        if loadeImage != nil { return Text("") }
+        if isLoading { return Text("Loading") }
+        if loadingFailed { return Text("Could not load") }
+        return Text("Not loaded")
+    }
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color.gray.opacity(0.1).ignoresSafeArea()
@@ -25,6 +33,8 @@ struct FullScreenImageView: View {
                     Color.clear
                         .frame(width: 36, height: 36)
                         .padding()
+                        .accessibilityHidden(true)
+                    
                     Text(image.title)
                         .font(.headline)
                         .foregroundStyle(.black)
@@ -40,6 +50,7 @@ struct FullScreenImageView: View {
                             .background(.ultraThickMaterial, in: Circle())
                             .padding()
                     }
+                    .accessibilityLabel(Text("Close"))
 
                 }
                 .background(.ultraThinMaterial)
@@ -65,6 +76,7 @@ extension FullScreenImageView {
             Image(uiImage: loadeImage)
                 .resizable()
                 .scaledToFit()
+                .accessibilityLabel(Text(image.title))
         } else if loadingFailed {
             Image(systemName: "photo.trianglebadge.exclamationmark")
                 .font(.largeTitle)
@@ -76,9 +88,13 @@ extension FullScreenImageView {
         }
 
     }
+    
     private func loadImage() async {
         do {
             loadingFailed = false
+            isLoading = true
+            defer { isLoading = false } //mare ure loadin state is changed when exist the function
+            
             print("Load image: \(image.id) form \(image.imageURL)")
             //lets use cached data also here.
             let data = try await ImageLoader.shared.retrieveImage(for: image.imageURL, allowNetwork: isOnline)

@@ -36,18 +36,18 @@ final class ImageListViewModel {
             let result = try await wallpaperRepository.fetchImages()
             images = result.items
             if (result.source == .Cache){
-                showToast(result.isFromOffline ? "Offline — cached list" : "Showing cached list" )
+                showToast(String(localized: result.isFromOffline ? "Offline — cached list" : "Showing cached list" ))
             }else {
                 dataSynced = true
             }
             
         }catch {
-            showToast("Could not load image list")
+            showToast(String(localized: "Could not load image list"))
         }
     }
     func handleConnectivityChange(from wasConnected: Bool, to isConnected: Bool) async {
             if isConnected && !wasConnected {
-                showToast("Back online")
+                showToast(String(localized:"Back online"))
                 //Do not load data every time is connected.
                 guard !dataSynced else { return }
                 await loadData()
